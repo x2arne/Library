@@ -865,6 +865,9 @@ end
 
 -- Background default (otomatis): download dari URL lalu jadikan asset via getcustomasset
 local DEFAULT_BG_URL = "https://raw.githubusercontent.com/naells/NaellUI/refs/heads/main/img/background3.jpg"
+-- Logo default library: raw URL dari repo (PNG). Kalau file belum ada / executor
+-- gak support getcustomasset, otomatis fallback ke assetid lama di bawah.
+local DEFAULT_LOGO_URL = "https://raw.githubusercontent.com/x2arne/Library/refs/heads/main/stealthx-logo-128.png"
 local function ResolveBackground(src)
     if src == nil or src == "" then return nil end
     src = tostring(src)
@@ -1021,7 +1024,7 @@ function ProjectSenzu:Window(GuiConfig)
     GuiConfig["Tab Width"] = GuiConfig["Tab Width"] or 120
     GuiConfig.Version      = GuiConfig.Version or 1
     -- LogoHUB/WindowIMG/ToggleImage boleh ID angka atau URL gambar (PNG/JPG) -> otomatis didownload via DownloadAsset
-    GuiConfig.LogoHUB      = ResolveBackground(GuiConfig.LogoHUB) or "rbxassetid://131719728791968" -- logo di kiri judul (topbar)
+    GuiConfig.LogoHUB      = ResolveBackground(GuiConfig.LogoHUB) or ResolveBackground(DEFAULT_LOGO_URL) or "rbxassetid://131719728791968" -- logo di kiri judul (topbar); default raw URL repo -> fallback assetid lama
     GuiConfig.WindowIMG    = ResolveBackground(GuiConfig.WindowIMG) or GuiConfig.LogoHUB -- logo samar di tengah konten
     CurrentNotifyLogo      = GuiConfig.WindowIMG -- logo notif = logo tengah UI
     GuiConfig.DropdownColor        = GuiConfig.DropdownColor or ProjectSenzu.DropdownColor
@@ -1473,7 +1476,7 @@ function ProjectSenzu:Window(GuiConfig)
     FullScreen.Name = "FullScreen"
     FullScreen.Parent = Top
 
-    ImageLabel3.Image = "rbxassetid://113480421738477" -- ganti dengan icon fullscreen sesuai assetid kamu
+    ImageLabel3.Image = ResolveBackground(GuiConfig.FullscreenIcon) or "rbxassetid://113480421738477" -- icon fullscreen; ganti via Window({ FullscreenIcon = "URL/ID" }), boleh raw URL PNG/JPG
     ImageLabel3.AnchorPoint = Vector2.new(0.5, 0.5)
     ImageLabel3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     ImageLabel3.BackgroundTransparency = 0.9990000128746033
